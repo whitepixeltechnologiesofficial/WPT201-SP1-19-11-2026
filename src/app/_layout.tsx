@@ -6,7 +6,9 @@ import {
   useFonts,
 } from '@expo-google-fonts/inter';
 import { Stack, usePathname, useRouter } from 'expo-router';
+import * as ScreenOrientation from 'expo-screen-orientation';
 import { useEffect } from 'react';
+import { Dimensions, Platform } from 'react-native';
 import { useAuthGate } from '../hooks/useAuthGate';
 import { resolveRedirect } from '../lib/resolveRedirect';
 import { ThemeProvider } from '../theme/theme-context';
@@ -23,6 +25,18 @@ export default function RootLayout() {
   const gate = useAuthGate();
   const redirect = resolveRedirect(pathname, gate);
 
+  useEffect(() => {
+  if (Platform.OS === 'web') return;
+
+  const { width, height } = Dimensions.get('screen');
+  if (Math.min(width, height) < 600) {
+    void ScreenOrientation.lockAsync(
+      ScreenOrientation.OrientationLock.PORTRAIT_UP,
+    ).catch((error: unknown) => {
+      console.warn('Unable to lock phone orientation to portrait:', error);
+    });
+  }
+}, []);
   useEffect(() => {
     if (!gate.loading && redirect) {
       router.replace(redirect as never);

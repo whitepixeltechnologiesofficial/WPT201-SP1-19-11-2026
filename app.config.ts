@@ -5,7 +5,7 @@ const config: ExpoConfig = {
   slug: 'wpt-201-a',
   version: '1.0.0',
   scheme: 'wpt201a',
-  orientation: 'portrait',
+  orientation: 'default',
   userInterfaceStyle: 'automatic',
   icon: './assets/images/icon.png',
 
